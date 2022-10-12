@@ -12,27 +12,50 @@ var gameTimer: Timer?
 var fireworks = [SKNode]()
 
 var scoreLabel: SKLabelNode!
+var explodeLabel: SKLabelNode!
+var gameOverLabel: SKLabelNode!
+var restartLabel: SKLabelNode!
 
 let leftEdge = -22
 let bottomEdge = -22
 let rightEdge = 1024 + 22
 
-var score = 0/* {
+var numberOfLaunches = 0
+var score = 0 {
     didSet {
         scoreLabel.text = "Score: \(score)"
     }
-}*/
+}
+
+var isGameOver = false
 
 class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
+        
         let background = SKSpriteNode(imageNamed: "background")
         background.zPosition = -1
         background.position = CGPoint(x: 512, y: 384)
         background.blendMode = .replace
         addChild(background)
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
+        // Challenge 1:
+        scoreLabel = SKLabelNode(fontNamed: "Zapfino")
+        scoreLabel.zPosition = 0
+        scoreLabel.position = CGPoint(x: 1024, y: 718)
+        scoreLabel.horizontalAlignmentMode = .right
+        scoreLabel.text = "Score: 0"
+        addChild(scoreLabel)
+        
+        explodeLabel = SKLabelNode(fontNamed: "PartyLetPlain")
+        explodeLabel.zPosition = 0
+        explodeLabel.position = CGPoint(x: 512, y: 18)
+        explodeLabel.horizontalAlignmentMode = .center
+        explodeLabel.text = "*kaboom*!"
+        explodeLabel.fontSize = 56
+        addChild(explodeLabel)
+        
+        startGame()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -104,6 +127,13 @@ class GameScene: SKScene {
     @objc func launchFireworks() {
         let movementAmount: CGFloat = 1800
         
+        // Challenge 2:
+        numberOfLaunches += 1
+        if numberOfLaunches == 11 {
+            gameOver()
+            return
+        }
+        
         switch Int.random(in: 0...3) {
         case 0:
             // fire five, straight up
@@ -112,6 +142,7 @@ class GameScene: SKScene {
             createFirework(xMovement: 0, x: 512 - 100, y: bottomEdge)
             createFirework(xMovement: 0, x: 512 + 100, y: bottomEdge)
             createFirework(xMovement: 0, x: 512 + 200, y: bottomEdge)
+            
             
         case 1:
             // fire five, in a fan
@@ -161,6 +192,16 @@ class GameScene: SKScene {
             node.name = "selected"
             node.colorBlendFactor = 0
         }
+        
+        if isGameOver {
+            if nodesAtPoint.contains(restartLabel) {
+                startGame()
+            }
+        }
+        
+        if nodesAtPoint.contains(explodeLabel) {
+            explodeFireworks()
+        }
     }
     
     func explode(firework: SKNode) {
@@ -199,5 +240,47 @@ class GameScene: SKScene {
         default:
             score += 4000
         }
+    }
+    
+    func gameOver() {
+        gameTimer?.invalidate()
+        
+        for node in fireworks {
+            node.removeFromParent()
+        }
+        
+        isGameOver = true
+        
+        gameOverLabel = SKLabelNode(fontNamed: "PartyLetPlain")
+        gameOverLabel.zPosition = 0
+        gameOverLabel.position = CGPoint(x: 512, y: 334)
+        gameOverLabel.horizontalAlignmentMode = .center
+        gameOverLabel.text = "Game over!"
+        gameOverLabel.fontSize = 76
+        addChild(gameOverLabel)
+        
+        restartLabel = SKLabelNode(fontNamed: "Zapfino")
+        restartLabel.zPosition = 0
+        restartLabel.position = CGPoint(x: 512, y: 264)
+        restartLabel.horizontalAlignmentMode = .center
+        restartLabel.text = "Restart"
+        addChild(restartLabel)
+    }
+    
+    func startGame() {
+        numberOfLaunches = 0
+        score = 0
+        
+        if let gameOverLabel = gameOverLabel {
+            gameOverLabel.removeFromParent()
+        }
+        
+        if let restartLabel = restartLabel {
+            restartLabel.removeFromParent()
+        }
+        
+        isGameOver = false
+        
+        gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
     }
 }
