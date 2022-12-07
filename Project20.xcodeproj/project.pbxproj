@@ -63,11 +63,11 @@
 			children = (
 				B8D2F46E28F5D5B7004ECF9A /* AppDelegate.swift */,
 				B8D2F47028F5D5B7004ECF9A /* GameScene.sks */,
-				B8D2F47428F5D5B7004ECF9A /* GameScene.swift */,
 				B8D2F47628F5D5B7004ECF9A /* GameViewController.swift */,
+				B8D2F47428F5D5B7004ECF9A /* GameScene.swift */,
 				B8D2F47828F5D5B7004ECF9A /* Main.storyboard */,
-				B8D2F47B28F5D5B9004ECF9A /* Assets.xcassets */,
 				B8D2F47D28F5D5B9004ECF9A /* LaunchScreen.storyboard */,
+				B8D2F47B28F5D5B9004ECF9A /* Assets.xcassets */,
 				B8D2F48628F5D603004ECF9A /* explode.sks */,
 				B8D2F48528F5D603004ECF9A /* fuse.sks */,
 			);

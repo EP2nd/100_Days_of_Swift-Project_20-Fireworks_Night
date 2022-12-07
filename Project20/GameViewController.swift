@@ -5,9 +5,9 @@
 //  Created by Edwin Przeźwiecki Jr. on 11/10/2022.
 //
 
-import UIKit
-import SpriteKit
 import GameplayKit
+import SpriteKit
+import UIKit
 
 class GameViewController: UIViewController {
 
@@ -15,17 +15,14 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
+            /// Load the SKScene from 'GameScene.sks':
             if let scene = SKScene(fileNamed: "GameScene") {
-                // Set the scale mode to scale to fit the window
+                /// Set the scale mode to scale to fit the window:
                 scene.scaleMode = .aspectFill
-                
-                // Present the scene
+                /// Present the scene:
                 view.presentScene(scene)
             }
-            
             view.ignoresSiblingOrder = true
-            
             view.showsFPS = true
             view.showsNodeCount = true
         }
@@ -44,8 +41,10 @@ class GameViewController: UIViewController {
     }
     
     override func motionBegan(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        
         guard let skView = view as? SKView else { return }
         guard let gameScene = skView.scene as? GameScene else { return }
+        
         gameScene.explodeFireworks()
     }
 }
